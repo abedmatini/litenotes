@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid');
             $table->foreignId('user_id')->constrained(); // including user id as foreign key
             $table->string('title');
             $table->longText('text');

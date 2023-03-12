@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Note;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class NoteController extends Controller
 {
@@ -41,6 +42,7 @@ class NoteController extends Controller
         ]);
 
         Note::create([
+            'uuid'  => Str::uuid(),
             'user_id' => Auth::id(),
             'title' => $request->title,
             'text' => $request->text
@@ -51,17 +53,25 @@ class NoteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Note $note)
     {
-        //
+//        $note = Note::where('uuid', $uuid)->where('user_id',Auth::id())->firstOrFail();
+        if($note->user_id != Auth::id()) {
+            return abort(403);
+        }
+        return view('notes.show')->with('note', $note);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Note $note)
     {
-        //
+        if($note->user_id != Auth::id()) {
+            return abort(403);
+        }
+        return view('notes.edit')->with('note', $note);
+
     }
 
     /**
